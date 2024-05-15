@@ -1141,8 +1141,8 @@ void set_struts(alignment align) {
   if (strut != None) {
     long sizes[STRUT_COUNT] = {0};
 
-    int display_width = workarea.width();
-    int display_height = workarea.height();
+    int display_width = XDisplayWidth(display, 0);
+    int display_height = XDisplayHeight(display, 0);
 
     switch (horizontal_alignment(align)) {
       case axis_align::START:
@@ -1221,8 +1221,8 @@ void xpmdb_swap_buffers(void) {
     XCopyArea(display, window.back_buffer, window.window, window.gc, 0, 0,
               window.geometry.get_width(), window.geometry.get_height(), 0, 0);
     XSetForeground(display, window.gc, 0);
-    XFillRectangle(display, window.drawable, window.gc, 0, 0, window.geometry.get_width(),
-                   window.geometry.get_height());
+    XFillRectangle(display, window.drawable, window.gc, 0, 0,
+                   window.geometry.get_width(), window.geometry.get_height());
     XFlush(display);
   }
 }
