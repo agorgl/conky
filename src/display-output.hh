@@ -183,14 +183,20 @@ static inline conky::display_output_base *display_output() {
   return nullptr;
 }
 
-template <typename T>
+template <typename T, bool Inverse = false>
 inline T dpi_scale(T value) {
   static_assert(std::is_arithmetic_v<T>,
                 "dpi_scale value type must be a number");
 #ifdef BUILD_GUI
   auto output = display_output();
   if (output) {
-    return T(std::round(static_cast<double>(value) * output->get_dpi_scale()));
+    if constexpr (Inverse) {
+      return T(
+          std::round(static_cast<double>(value) / output->get_dpi_scale()));
+    } else {
+      return T(
+          std::round(static_cast<double>(value) * output->get_dpi_scale()));
+    }
   }
 #endif /* BUILD_GUI */
 

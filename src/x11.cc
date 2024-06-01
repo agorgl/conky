@@ -29,6 +29,7 @@
 
 #include "config.h"
 
+#include "display-output.hh"
 #include "x11-settings.h"
 #include "x11.h"
 
@@ -1146,20 +1147,25 @@ void set_struts(alignment align) {
 
     switch (horizontal_alignment(align)) {
       case axis_align::START:
-        sizes[*x11_strut::LEFT] = std::clamp(
-            window.geometry.x() + window.geometry.end_x(), 0, display_width);
+        sizes[*x11_strut::LEFT] =
+            std::clamp(dpi_scale(window.geometry.x() + window.geometry.end_x()),
+                       0, display_width);
         sizes[*x11_strut::LEFT_START_Y] =
-            std::clamp(window.geometry.y(), 0, display_height);
+            std::clamp(dpi_scale(window.geometry.y()), 0, display_height);
         sizes[*x11_strut::LEFT_END_Y] = std::clamp(
-            window.geometry.y() + window.geometry.height(), 0, display_height);
+            dpi_scale(window.geometry.y() + window.geometry.height()), 0,
+            display_height);
         break;
       case axis_align::END:
-        sizes[*x11_strut::RIGHT] =
-            std::clamp(display_width - window.geometry.x(), 0, display_width);
-        sizes[*x11_strut::RIGHT_START_Y] =
-            std::clamp(window.geometry.y(), 0, display_height);
-        sizes[*x11_strut::RIGHT_END_Y] = std::clamp(
-            window.geometry.y() + window.geometry.height(), 0, display_height);
+        sizes[*x11_strut::RIGHT] = std::clamp(
+            dpi_scale<int, true>(display_width - window.geometry.x()), 0,
+            display_width);
+        sizes[*x11_strut::RIGHT_START_Y] = std::clamp(
+            dpi_scale<int, true>(window.geometry.y()), 0, display_height);
+        sizes[*x11_strut::RIGHT_END_Y] =
+            std::clamp(dpi_scale<int, true>(window.geometry.y() +
+                                            window.geometry.height()),
+                       0, display_height);
         break;
       case axis_align::MIDDLE:
         switch (vertical_alignment(align)) {
